@@ -1,9 +1,9 @@
-name: ST-BoilerPlate # TODO: 수정
-main: net.starly.boilerplate.BoilerPlateMain # TODO: 수정
+name: ST-WarpReloaded
+main: net.starly.warp.WarpMain
 author: Starly Team
 website: http://starly.kr/
 
-description: BoilerPlate Plugin. # TODO: 수정
+description: BoilerPlate Plugin
 
 softdepend:
   - ST-Core
@@ -12,3 +12,5 @@ version: 1.0
 api-version: 1.13
 
 commands:
+  워프:
+    description: Warp Plugin Command

@@ -1,0 +1,43 @@
+settings:
+  # 워프 명령어 쿨타임 ( 음수로 설정 시 쿨타임 없음 )
+  cooldown: -1
+
+messages:
+  # 워프 성공 시 뜨는 메시지
+  warpComplete: "&a워프에 성공하였습니다!"
+
+  # 워프 생성 시 뜨는 메시지
+  warpCreateComplete: "&a워프를 성공적으로 생성하였습니다!"
+
+  # 워프 삭제 시 뜨는 메시지
+  warpDeleteComplete: "&a워프를 성공적으로 삭제하였습니다!"
+
+  # 스폰 등록 완료 시 메시지
+  spawnRegisterComplete: "&a성공적으로 스폰을 등록하였습니다!"
+
+  # 스폰 삭제 완료 시 메시지
+  spawnUnRegisterComplete: "&a성공적으로 스폰을 제거하였습니다!"
+
+errorMessages:
+  # 권한 부족 시 메시지
+  permissionDenied: "&c권한이 부족합니다!"
+
+  # 워프 삭제 실패 메시지 ( 존재하지 않는 워프 )
+  noExistWarpDelete: "&c존재하지 않는 워프입니다!"
+
+  # 워프 생성 실패 메시지 ( 이미 존재하는 이름 )
+  existWarpName: "&c이미 존재하는 워프 이름입니다!"
+
+  # 워프 이동 실패 메시지 ( 존재하지 않는 워프 )
+  noExistWarpMove: "&c존재하지 않는 워프입니다!"
+
+  # 스폰 삭제 실패 메시지 ( 스폰이 없음 )
+  noExistSpawnDelete: "&c스폰이 등록되지 않았습니다!"
+
+  # 스폰 워프 실패 메시지 ( 스폰이 없음 )
+  noExistSpawnWarp: "&c스폰이 등록되지 않았습니다!"
+
+  # 해당 명령어를 사용 할 수 없는 환경에서 명령어를 실행 했을 때
+  wrongPlatform: "&c해당 명령어는 이 환경에서 사용할 수 없습니다!"
+
+

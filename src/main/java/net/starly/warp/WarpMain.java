@@ -1,16 +1,22 @@
-package net.starly.boilerplate;
+package net.starly.warp;
 
 import net.starly.core.bstats.Metrics;
+import net.starly.warp.data.WarpData;
+import net.starly.warp.manager.WarpManager;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class BoilerPlateMain extends JavaPlugin {
+public class WarpMain extends JavaPlugin {
 
-    private static BoilerPlateMain instance;
-    public static BoilerPlateMain getInstance() {
+    private static WarpMain instance;
+    public static WarpMain getInstance() {
         return instance;
     }
 
+    @Override
+    public void onLoad() {
+        instance = this;
+    }
 
     @Override
     public void onEnable() {
@@ -25,12 +31,16 @@ public class BoilerPlateMain extends JavaPlugin {
 
         /* SETUP
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
-        instance = this;
         new Metrics(this, 12345); // TODO: 수정
 
         /* CONFIG
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
-        // TODO: 수정
+        saveDefaultConfig();
+        reloadConfig();
+
+        /* DATA
+        ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
+        WarpManager.getInstance().loadData();
 
         /* COMMAND
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
@@ -44,5 +54,10 @@ public class BoilerPlateMain extends JavaPlugin {
     private boolean isPluginEnabled(String name) {
         Plugin plugin = getServer().getPluginManager().getPlugin(name);
         return plugin != null && plugin.isEnabled();
+    }
+
+    @Override
+    public void onDisable() {
+        WarpManager.getInstance().saveData(); // 데이터 저장
     }
 }
