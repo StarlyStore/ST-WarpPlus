@@ -40,4 +40,7 @@ errorMessages:
   # 해당 명령어를 사용 할 수 없는 환경에서 명령어를 실행 했을 때
   wrongPlatform: "&c해당 명령어는 이 환경에서 사용할 수 없습니다!"
 
+  # 워프 목록이 비었을 때
+  emptyWarpList: "&c설정된 워프가 없습니다!"
+
 

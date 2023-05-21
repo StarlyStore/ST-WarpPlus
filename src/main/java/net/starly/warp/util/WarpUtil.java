@@ -9,20 +9,19 @@ import org.bukkit.entity.Player;
 
 public class WarpUtil {
     public static void teleport(WarpData warpData, Player player) {
+        if (!WarpManager.getInstance().has(warpData.getName())) return;
         player.teleport(warpData.getLocation());
         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMEN_TELEPORT,100,0);
         player.sendMessage(MessageUtil.getMessage(MessageType.WARP_COMPLETE));
     }
 
     public static void registerWarp(String name, Location location) {
-        WarpData warpData = new WarpData(name,location);
-        if (WarpManager.getInstance().has(warpData)) return;
-        WarpManager.getInstance().addWarp(warpData);
+        if (WarpManager.getInstance().has(name)) return;
+        WarpManager.getInstance().addWarp(new WarpData(name,location));
     }
 
     public static void unRegisterWarp(String name) {
-        WarpData warpData = WarpManager.getInstance().getWarp(name);
-        if (warpData == null) return;
-        WarpManager.getInstance().removeWarp(warpData);
+        if (!WarpManager.getInstance().has(name)) return;
+        WarpManager.getInstance().removeWarp(WarpManager.getInstance().getWarp(name));
     }
 }

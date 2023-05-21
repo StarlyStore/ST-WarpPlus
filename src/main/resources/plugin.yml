@@ -14,3 +14,32 @@ api-version: 1.13
 commands:
   워프:
     description: Warp Plugin Command
+
+permissions:
+  warp.teleport:
+    description: 워프 이동
+  warp.forcedteleport:
+    description: 다른 플레이어를 워프
+  warp.create:
+    description: 워프 생성
+  warp.delete:
+    description: 워프 삭제
+  warp.setspawn:
+    description: 스폰 설정
+  warp.delspawn:
+    description: 스폰 삭제
+  warp.spawn:
+    description: 스폰 이동
+  warp.list:
+    description: 워프 목록
+  warp.*:
+    description: permission of ST-WarpReloaded plugin.
+    children:
+      - warp.teleport
+      - warp.forcedteleport
+      - warp.create
+      - warp.delete
+      - warp.setspawn
+      - warp.delspawn
+      - warp.spawn
+      - warp.list

@@ -44,13 +44,6 @@ public class WarpManager {
         return null;
     }
 
-    public WarpData getWarp(Location location) {
-        for (WarpData warpData : warpDataList) {
-            if (warpData.getLocation().equals(location)) return warpData;
-        }
-        return null;
-    }
-
     public void addWarp(WarpData warpData) {
         if (warpDataList.contains(warpData)) return;
         warpDataList.add(warpData);
@@ -61,8 +54,14 @@ public class WarpManager {
         warpDataList.remove(warpData);
     }
 
-    public boolean has(WarpData warpData) {
-        return warpDataList.contains(warpData);
+    public boolean has(String name) {
+        for (WarpData data : warpDataList) {
+            if (data.getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void saveData() {
