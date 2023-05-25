@@ -24,14 +24,14 @@ permissions:
     description: 워프 생성
   warp.delete:
     description: 워프 삭제
-  warp.setspawn:
-    description: 스폰 설정
-  warp.delspawn:
-    description: 스폰 삭제
   warp.spawn:
     description: 스폰 이동
   warp.list:
     description: 워프 목록
+  warp.commandCreate:
+    description: 명령어 등록
+  warp.commandDelete:
+    description: 명령어 삭제
   warp.*:
     description: permission of ST-WarpReloaded plugin.
     children:
@@ -39,7 +39,7 @@ permissions:
       - warp.forcedteleport
       - warp.create
       - warp.delete
-      - warp.setspawn
-      - warp.delspawn
       - warp.spawn
       - warp.list
+      - warp.commandCreate
+      - warp.commandDelete

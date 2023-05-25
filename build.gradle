@@ -2,8 +2,8 @@ plugins {
     id 'java'
 }
 
-group 'net.starly.warp'
-version '1.0'
+group 'net.starly'
+version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()

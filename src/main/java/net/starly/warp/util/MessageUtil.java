@@ -32,6 +32,21 @@ public class MessageUtil {
             case REGISTER_SPAWN:
                 message = prefix + ChatColor.translateAlternateColorCodes('&', config.getString("messages.spawnRegisterComplete"));
                 break;
+            case WARP_LIST_TITLE:
+                message = prefix + ChatColor.translateAlternateColorCodes('&', config.getString("messages.warpListTitle"));
+                break;
+            case WARP_LIST_FORMAT:
+                message = prefix + ChatColor.translateAlternateColorCodes('&', config.getString("messages.warpListFormat"));
+                break;
+            case FORCE_TELEPORTED:
+                message = prefix + ChatColor.translateAlternateColorCodes('&', config.getString("messages.forceTeleported"));
+                break;
+            case COMMAND_CREATE_SUCCESS:
+                message = prefix + ChatColor.translateAlternateColorCodes('&', config.getString("messages.commandCreateSuccess"));
+                break;
+            case COMMAND_DELETE_SUCCESS:
+                message = prefix + ChatColor.translateAlternateColorCodes('&', config.getString("messages.commandDeleteSuccess"));
+                break;
             case PERMISSION_DENIED:
                 message = prefix + ChatColor.translateAlternateColorCodes('&', config.getString("errorMessages.permissionDenied"));
                 break;
@@ -55,6 +70,18 @@ public class MessageUtil {
                 break;
             case EMPTY_WARP_LIST:
                 message = prefix + ChatColor.translateAlternateColorCodes('&', config.getString("errorMessages.emptyWarpList"));
+                break;
+            case NO_EXIST_PLAYER_WARP:
+                message = prefix + ChatColor.translateAlternateColorCodes('&', config.getString("errorMessages.noExistPlayerWarp"));
+                break;
+            case EXIST_COMMAND:
+                message = prefix + ChatColor.translateAlternateColorCodes('&', config.getString("errorMessages.existCommand"));
+                break;
+            case NO_EXIST_COMMAND:
+                message = prefix + ChatColor.translateAlternateColorCodes('&', config.getString("errorMessages.noExistCommand"));
+                break;
+            case NO_EXIST_WARP_REGISTER_COMMAND:
+                message = prefix + ChatColor.translateAlternateColorCodes('&', config.getString("errorMessages.noExistWarpRegisterCommand"));
                 break;
         }
         return message;

@@ -12,11 +12,21 @@ messages:
   # 워프 삭제 시 뜨는 메시지
   warpDeleteComplete: "&a워프를 성공적으로 삭제하였습니다!"
 
-  # 스폰 등록 완료 시 메시지
-  spawnRegisterComplete: "&a성공적으로 스폰을 등록하였습니다!"
+  # 워프 목록 제목 텍스트
+  warpListTitle: "&b워프 목록"
 
-  # 스폰 삭제 완료 시 메시지
-  spawnUnRegisterComplete: "&a성공적으로 스폰을 제거하였습니다!"
+  # 워프 목록 표시 형식
+  warpListFormat: "&b&l>&r &l%warpname%"
+
+  # 강제 워프 당했을 시 메시지
+  forceTeleported: "&b&l%user%님에 의해 텔레포트 되었습니다!"
+
+  # 명령어 생성 성공 메시지
+  commandCreateSuccess: "&a성공적으로 명령어를 생성하였습니다!"
+
+  # 명령어 삭제 성공 메시지
+  commandDeleteSuccess: "&a성공적으로 명령어를 삭제하였습니다!"
+
 
 errorMessages:
   # 권한 부족 시 메시지
@@ -31,16 +41,22 @@ errorMessages:
   # 워프 이동 실패 메시지 ( 존재하지 않는 워프 )
   noExistWarpMove: "&c존재하지 않는 워프입니다!"
 
-  # 스폰 삭제 실패 메시지 ( 스폰이 없음 )
-  noExistSpawnDelete: "&c스폰이 등록되지 않았습니다!"
-
-  # 스폰 워프 실패 메시지 ( 스폰이 없음 )
-  noExistSpawnWarp: "&c스폰이 등록되지 않았습니다!"
-
   # 해당 명령어를 사용 할 수 없는 환경에서 명령어를 실행 했을 때
   wrongPlatform: "&c해당 명령어는 이 환경에서 사용할 수 없습니다!"
 
   # 워프 목록이 비었을 때
   emptyWarpList: "&c설정된 워프가 없습니다!"
+
+  # 존재하지 않는 플레이어를 워프 시킬 때
+  noExistPlayerWarp: "&c존재하지 않는 플레이어입니다."
+
+  # 이미 존재하는 명령어를 생성하려 할 때
+  existCommand: "&c이미 사용중인 명령어입니다."
+
+  # 생성되지 않은 명령어를 삭제하려 할 때
+  noExistCommand: "&c할당되지 않은 명령어입니다."
+
+  # 존재하지 않는 워프를 할당하려 할 때
+  noExistWarpRegisterCommand: "&c존재하지 않는 워프입니다."
 
 
