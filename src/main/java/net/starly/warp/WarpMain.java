@@ -1,10 +1,7 @@
 package net.starly.warp;
 
-import net.starly.core.bstats.Metrics;
-import net.starly.warp.command.WarpCommand;
-import net.starly.warp.command.tabCompleter.WarpTabCompleter;
-import net.starly.warp.data.WarpData;
-import net.starly.warp.listener.TabCompleteListener;
+import net.starly.warp.command.WarpExecutor;
+import net.starly.warp.context.MessageContent;
 import net.starly.warp.manager.WarpManager;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,7 +36,7 @@ public class WarpMain extends JavaPlugin {
         /* CONFIG
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
         saveDefaultConfig();
-        reloadConfig();
+        MessageContent.getInstance().initialize(getConfig());
 
         /* DATA
         ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
@@ -47,12 +44,12 @@ public class WarpMain extends JavaPlugin {
 
         /* COMMAND
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
-        getCommand("워프").setExecutor(new WarpCommand());
-        getCommand("워프").setTabCompleter(new WarpTabCompleter());
+        getCommand("워프").setExecutor(new WarpExecutor());
+        getCommand("워프").setTabCompleter(new WarpExecutor());
 
         /* LISTENER
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
-        getServer().getPluginManager().registerEvents(new TabCompleteListener(), this);
+
     }
 
     private boolean isPluginEnabled(String name) {

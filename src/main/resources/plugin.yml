@@ -16,30 +16,27 @@ commands:
     description: Warp Plugin Command
 
 permissions:
-  warp.teleport:
+  starly.warp.teleport:
     description: 워프 이동
-  warp.forcedteleport:
+  starly.warp.forcedteleport:
     description: 다른 플레이어를 워프
-  warp.create:
+  starly.warp.create:
     description: 워프 생성
-  warp.delete:
+  starly.warp.delete:
     description: 워프 삭제
-  warp.spawn:
-    description: 스폰 이동
-  warp.list:
+  starly.warp.list:
     description: 워프 목록
-  warp.commandCreate:
-    description: 명령어 등록
-  warp.commandDelete:
-    description: 명령어 삭제
-  warp.*:
+  starly.warp.triggerCreate:
+    description: 트리거 등록
+  starly.warp.triggerDelete:
+    description: 트리거 삭제
+  starly.warp.*:
     description: permission of ST-WarpReloaded plugin.
     children:
-      - warp.teleport
-      - warp.forcedteleport
-      - warp.create
-      - warp.delete
-      - warp.spawn
-      - warp.list
-      - warp.commandCreate
-      - warp.commandDelete
+      - starly.warp.teleport
+      - starly.warp.forcedteleport
+      - starly.warp.create
+      - starly.warp.delete
+      - starly.warp.list
+      - starly.warp.triggerCreate
+      - starly.warp.triggerDelete
