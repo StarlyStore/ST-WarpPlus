@@ -35,12 +35,14 @@ public class WarpManager {
             if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdir();
 
             File file = new File(plugin.getDataFolder(), "data.json");
-            if (!file.exists()) file.createNewFile();
+            if (!file.exists()) System.out.println(file.createNewFile());
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             Reader fileReader = Files.newBufferedReader(file.toPath());
 
             JsonObject json = gson.fromJson(fileReader, JsonObject.class);
+
+            if (json == null) return;
 
             if (!json.has("warpData")) return;
 
@@ -114,7 +116,7 @@ public class WarpManager {
 
     public WarpTrigger getTrigger(Location location) {
         for (WarpTrigger trigger : triggerList) {
-            if (trigger.getLocation().equals(location)) {
+            if (trigger.getLocation().getBlock().equals(location.getBlock())) {
                 return trigger;
             }
         }
@@ -123,7 +125,7 @@ public class WarpManager {
 
     public boolean hasTrigger(Location location) {
         for (WarpTrigger trigger : triggerList) {
-            if (trigger.getLocation().equals(location)) {
+            if (trigger.getLocation().getBlock().equals(location.getBlock())) {
                 return true;
             }
         }

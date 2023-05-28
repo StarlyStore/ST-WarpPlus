@@ -2,6 +2,9 @@ settings:
   # 워프 명령어 쿨타임 ( 음수로 설정 시 쿨타임 없음 )
   cooldown: -1
 
+  # 워프트리거 파티클 표시 여부
+  showParticle: false
+
 messages:
   # 접두사
   prefix: "[ WarpReloaded ] "
@@ -22,7 +25,7 @@ messages:
   warpListFormat: "&b&l>&r &l%warpname%"
 
   # 워프 목록 하단
-  warpListFooter: "/대기열 목록 [<페이지>]로 더 많은 페이지를 확인해보세요!"
+  warpListFooter: "/워프 목록 [<페이지>]로 더 많은 페이지를 확인해보세요!"
 
   # 강제 워프 당했을 시 메시지
   forceTeleported: "&b&l%user%님에 의해 텔레포트 되었습니다!"
@@ -35,6 +38,15 @@ messages:
 
   # 트리거 생성 시 워프 이름 입력 안내 메시지
   enterWarpTriggerName: "&a연결하실 워프의 이름을 입력해주세요!"
+
+  # '/워프 트리거' 명령어 실행 시 뜨는 메시지
+  enterSelectionMode: "&a워프 트리거 등록은 우클릭, 삭제는 좌클릭을 해주세요."
+
+  # '/워프 트리거' 명령 취소 시 뜨는 메시지
+  exitTriggerMode: "&a트리거 등록 모드가 취소되었습니다."
+
+  # 리로드 완료 메시지
+  reloadComplete: "&a리로드가 완료되었습니다."
 
 
 errorMessages:

@@ -18,18 +18,28 @@ commands:
 permissions:
   starly.warp.teleport:
     description: 워프 이동
+    default: op
   starly.warp.forcedteleport:
     description: 다른 플레이어를 워프
+    default: op
   starly.warp.create:
     description: 워프 생성
+    default: op
   starly.warp.delete:
     description: 워프 삭제
+    default: op
   starly.warp.list:
     description: 워프 목록
+    default: op
   starly.warp.triggerCreate:
     description: 트리거 등록
+    default: op
   starly.warp.triggerDelete:
     description: 트리거 삭제
+    default: op
+  starly.warp.reload:
+    description: 플러그인 리로드
+    default: op
   starly.warp.*:
     description: permission of ST-WarpReloaded plugin.
     children:
@@ -40,3 +50,4 @@ permissions:
       - starly.warp.list
       - starly.warp.triggerCreate
       - starly.warp.triggerDelete
+      - starly.warp.reload

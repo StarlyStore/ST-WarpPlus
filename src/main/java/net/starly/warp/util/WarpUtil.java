@@ -13,9 +13,9 @@ public class WarpUtil {
         if (!WarpManager.getInstance().has(warpData.getName())) return;
         player.teleport(warpData.getLocation());
         try {
-            player.playSound(player.getLocation(), Sound.ENTITY_ENDERMEN_TELEPORT,100,0);
+            player.playSound(player.getLocation(), Sound.ENTITY_ENDERMEN_TELEPORT,100,1);
         } catch (NoSuchFieldError error) {
-            player.playSound(player.getLocation(), Sound.valueOf("ENTITY_ENDERMAN_TELEPORT"),100,0);
+            player.playSound(player.getLocation(), Sound.valueOf("ENTITY_ENDERMAN_TELEPORT"),100,1);
         }
         MessageContent.getInstance().getMessageAfterPrefix(MessageType.NORMAL, "warpComplete").ifPresent(player::sendMessage);
     }

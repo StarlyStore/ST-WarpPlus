@@ -50,6 +50,7 @@ public abstract class InputListenerBase {
                 PlayerInteractEvent clickEvent = (PlayerInteractEvent) event;
                 if (uuid.equals(clickEvent.getPlayer().getUniqueId())) {
                     HandlerList.unregisterAll(clickEventListener);
+                    listenerMap.remove(uuid);
                     listenerManager.onClick(clickEvent);
                 }
             }
@@ -67,6 +68,7 @@ public abstract class InputListenerBase {
                 AsyncPlayerChatEvent clickEvent = (AsyncPlayerChatEvent) event;
                 if (uuid.equals(clickEvent.getPlayer().getUniqueId())) {
                     HandlerList.unregisterAll(chatEventListener);
+                    listenerMap.remove(uuid);
                     listenerManager.onChat(clickEvent);
                 }
             }
@@ -92,6 +94,17 @@ public abstract class InputListenerBase {
                 }
             }
         }, WarpMain.getInstance());
+    }
+
+    public boolean has(Player player) {
+        return listenerMap.containsKey(player.getUniqueId());
+    }
+
+    public void removeTarget(Player player) {
+        Listener removedListener = listenerMap.remove(player.getUniqueId());
+        if (removedListener != null) {
+            HandlerList.unregisterAll(removedListener);
+        }
     }
 
 }

@@ -2,7 +2,9 @@ package net.starly.warp;
 
 import net.starly.warp.command.WarpExecutor;
 import net.starly.warp.context.MessageContent;
+import net.starly.warp.listener.PlayerMoveListener;
 import net.starly.warp.manager.WarpManager;
+import net.starly.warp.scheduler.ParticleScheduler;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,6 +40,12 @@ public class WarpMain extends JavaPlugin {
         saveDefaultConfig();
         MessageContent.getInstance().initialize(getConfig());
 
+        /* SCHEDULER
+         ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
+        if (getConfig().getBoolean("settings.showParticle")) {
+            ParticleScheduler.getInstance().runTaskTimer(this, 0L, 10);
+        }
+
         /* DATA
         ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
         WarpManager.getInstance().loadData();
@@ -49,7 +57,7 @@ public class WarpMain extends JavaPlugin {
 
         /* LISTENER
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
-
+        getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
     }
 
     private boolean isPluginEnabled(String name) {

@@ -5,17 +5,22 @@ import net.starly.warp.WarpMain;
 import net.starly.warp.context.MessageContent;
 import net.starly.warp.context.MessageType;
 import net.starly.warp.data.WarpData;
+import net.starly.warp.manager.InputManager;
 import net.starly.warp.manager.WarpManager;
+import net.starly.warp.scheduler.ParticleScheduler;
 import net.starly.warp.util.WarpUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.StringUtil;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 @AllArgsConstructor
@@ -50,11 +55,11 @@ public class WarpExecutor implements TabExecutor {
                 break;
             }
 
-            case "제거": {
+            case "삭제": {
                 if (!sender.hasPermission("starly.warp.delete"))
                     content.getMessageAfterPrefix(MessageType.ERROR, "permissionDenied").ifPresent(sender::sendMessage);
                 else if (args.length < 2)
-                    sender.sendMessage(content.getPrefix() + "§c사용법) /워프 제거 [<워프이름>]");
+                    sender.sendMessage(content.getPrefix() + "§c사용법) /워프 삭제 [<워프이름>]");
                 else if (!warpManager.has(args[1]))
                     content.getMessageAfterPrefix(MessageType.ERROR, "noExistWarpDelete").ifPresent(sender::sendMessage);
                 else {
@@ -119,17 +124,17 @@ public class WarpExecutor implements TabExecutor {
 
                 if ((page * 10) > size) page = 0;
 
-                content.getMessage(MessageType.NORMAL, "warpListTitle").ifPresent(message -> plugin.getLogger().log(Level.INFO,message));
+                content.getMessageAfterPrefix(MessageType.NORMAL, "warpListTitle").ifPresent(sender::sendMessage);
 
                 for (int i = page * 10; i < max; i++) {
                     if (i > size - 1) break;
                     WarpData warpData = warpDataList.get(i);
-                    content.getMessage(MessageType.NORMAL, "warpListFormat").ifPresent(message -> {
+                    content.getMessageAfterPrefix(MessageType.NORMAL, "warpListFormat").ifPresent(message -> {
                         String formattedMessage = message.replace("%warpname%", warpData.getName());
                         sender.sendMessage(formattedMessage);
                     });
                 }
-                content.getMessage(MessageType.NORMAL, "warpListFooter").ifPresent(sender::sendMessage);
+                content.getMessageAfterPrefix(MessageType.NORMAL, "warpListFooter").ifPresent(sender::sendMessage);
                 break;
             }
 
@@ -140,12 +145,42 @@ public class WarpExecutor implements TabExecutor {
                 }
 
                 if (!sender.hasPermission("starly.warp.triggerCreate") && !sender.hasPermission("starly.warp.triggerDelete")) {
-                    content.getMessageAfterPrefix(MessageType.ERROR,"permissionDenied").ifPresent(sender::sendMessage);
+                    content.getMessageAfterPrefix(MessageType.ERROR, "permissionDenied").ifPresent(sender::sendMessage);
                     break;
                 }
 
                 Player player = (Player) sender;
+                if (InputManager.getInstance().has(player)) {
+                    InputManager.getInstance().removeTarget(player);
+                    content.getMessageAfterPrefix(MessageType.NORMAL, "exitTriggerMode").ifPresent(player::sendMessage);
+                    break;
+                }
 
+                InputManager.getInstance().addClickListenTarget(player);
+                MessageContent.getInstance().getMessageAfterPrefix(MessageType.NORMAL, "enterSelectionMode").ifPresent(player::sendMessage);
+                break;
+            }
+
+            case "리로드": {
+                if (!sender.hasPermission("starly.warp.reload")) {
+                    content.getMessageAfterPrefix(MessageType.ERROR, "permissionDenied").ifPresent(sender::sendMessage);
+                    break;
+                }
+
+                FileConfiguration configuration = plugin.getConfig();
+
+                if (configuration.getBoolean("settings.showParticle"))
+                    ParticleScheduler.getInstance().stop();
+
+                plugin.saveDefaultConfig();
+                plugin.reloadConfig();
+
+                configuration = plugin.getConfig();
+
+                if (configuration.getBoolean("settings.showParticle"))
+                    ParticleScheduler.getInstance().runTaskTimer(plugin, 0L, 10L);
+                content.getMessageAfterPrefix(MessageType.NORMAL, "reloadComplete").ifPresent(sender::sendMessage);
+                break;
             }
 
         }
@@ -154,7 +189,25 @@ public class WarpExecutor implements TabExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        List<String> result = new ArrayList<>();
+        if (args.length == 1) {
+            if (sender.hasPermission("starly.warp.list")) result.add("목록");
+            if (sender.hasPermission("starly.warp.create")) result.add("생성");
+            if (sender.hasPermission("starly.warp.delete")) result.add("삭제");
+            if (sender.hasPermission("starly.warp.reload")) result.add("리로드");
+            if (sender.hasPermission("starly.warp.triggerCreate")) result.add("트리거");
+            else if (sender.hasPermission("starly.warp.triggerDelete")) result.add("트리거");
+
+            return StringUtil.copyPartialMatches(args[0], result, new ArrayList<>());
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("삭제")) {
+            if (!sender.hasPermission("starly.warp.delete")) return Collections.emptyList();
+
+            for (WarpData data : WarpManager.getInstance().getWarps()) {
+                result.add(data.getName());
+            }
+            return StringUtil.copyPartialMatches(args[1], result, new ArrayList<>());
+        }
         return Collections.emptyList();
     }
 }
