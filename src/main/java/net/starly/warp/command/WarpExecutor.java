@@ -6,7 +6,7 @@ import net.starly.warp.context.MessageContent;
 import net.starly.warp.context.MessageType;
 import net.starly.warp.data.WarpData;
 import net.starly.warp.manager.InputManager;
-import net.starly.warp.manager.WarpManager;
+import net.starly.warp.manager.WarpStorage;
 import net.starly.warp.scheduler.ParticleScheduler;
 import net.starly.warp.util.WarpUtil;
 import org.bukkit.Bukkit;
@@ -15,13 +15,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.StringUtil;
 
 import java.util.*;
-import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class WarpExecutor implements TabExecutor {
@@ -29,7 +27,7 @@ public class WarpExecutor implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         JavaPlugin plugin = WarpMain.getInstance();
-        WarpManager warpManager = WarpManager.getInstance();
+        WarpStorage warpStorage = WarpStorage.getInstance();
         MessageContent content = MessageContent.getInstance();
         if (args.length == 0) {
             sender.sendMessage(plugin.getName() + " version " + plugin.getDescription().getVersion());
@@ -43,13 +41,13 @@ public class WarpExecutor implements TabExecutor {
                     content.getMessageAfterPrefix(MessageType.ERROR, "wrongPlatform").ifPresent(sender::sendMessage);
                 else if (!sender.hasPermission("starly.warp.create"))
                     content.getMessageAfterPrefix(MessageType.ERROR, "permissionDenied").ifPresent(sender::sendMessage);
-                else if (args.length < 2)
+                else if (args.length != 2)
                     sender.sendMessage(content.getPrefix() + "§c사용법) /워프 생성 [<워프이름>]");
-                else if (warpManager.has(args[1]))
+                else if (warpStorage.has(args[1]))
                     content.getMessageAfterPrefix(MessageType.ERROR, "existWarpName").ifPresent(sender::sendMessage);
                 else {
                     Player player = (Player) sender;
-                    warpManager.addWarp(new WarpData(args[1], player.getLocation()));
+                    warpStorage.addWarp(new WarpData(args[1], player.getLocation()));
                     content.getMessageAfterPrefix(MessageType.NORMAL, "warpCreateComplete").ifPresent(sender::sendMessage);
                 }
                 break;
@@ -58,12 +56,12 @@ public class WarpExecutor implements TabExecutor {
             case "삭제": {
                 if (!sender.hasPermission("starly.warp.delete"))
                     content.getMessageAfterPrefix(MessageType.ERROR, "permissionDenied").ifPresent(sender::sendMessage);
-                else if (args.length < 2)
+                else if (args.length != 2)
                     sender.sendMessage(content.getPrefix() + "§c사용법) /워프 삭제 [<워프이름>]");
-                else if (!warpManager.has(args[1]))
+                else if (!warpStorage.has(args[1]))
                     content.getMessageAfterPrefix(MessageType.ERROR, "noExistWarpDelete").ifPresent(sender::sendMessage);
                 else {
-                    warpManager.removeWarp(warpManager.getWarp(args[1]));
+                    warpStorage.removeWarp(warpStorage.getWarp(args[1]));
                     content.getMessageAfterPrefix(MessageType.NORMAL, "warpDeleteComplete").ifPresent(sender::sendMessage);
                 }
                 break;
@@ -76,10 +74,10 @@ public class WarpExecutor implements TabExecutor {
                     if (sender.hasPermission("warp.forcedteleport"))
                         sender.sendMessage(content.getPrefix() + "§c사용법) /워프 이동 [<워프이름>] [<플레이어>]");
                     else sender.sendMessage(content.getPrefix() + "§c사용법) /워프 이동 [<워프이름>]");
-                } else if (!warpManager.has(args[1]))
+                } else if (!warpStorage.has(args[1]))
                     content.getMessageAfterPrefix(MessageType.ERROR, "noExistWarpMove").ifPresent(sender::sendMessage);
                 else {
-                    if (args.length > 2) {
+                    if (args.length == 3) {
                         if (!sender.hasPermission("starly.warp.forcedteleport")) {
                             content.getMessageAfterPrefix(MessageType.ERROR, "permissionDenied").ifPresent(sender::sendMessage);
                             break;
@@ -89,8 +87,8 @@ public class WarpExecutor implements TabExecutor {
                             content.getMessageAfterPrefix(MessageType.ERROR, "noExistPlayerWarp").ifPresent(sender::sendMessage);
                             break;
                         }
-                        WarpUtil.forceTeleport(warpManager.getWarp(args[1]), player, sender);
-                    } else {
+                        WarpUtil.forceTeleport(warpStorage.getWarp(args[1]), player, sender);
+                    } else if (args.length == 2) {
                         if (!sender.hasPermission("starly.warp.teleport")) {
                             content.getMessageAfterPrefix(MessageType.ERROR, "permissionDenied").ifPresent(sender::sendMessage);
                             break;
@@ -101,7 +99,15 @@ public class WarpExecutor implements TabExecutor {
                             break;
                         }
                         Player player = (Player) sender;
-                        WarpUtil.teleport(warpManager.getWarp(args[1]), player);
+                        WarpUtil.teleport(warpStorage.getWarp(args[1]), player);
+                        break;
+                    } else {
+                        if (sender.hasPermission("warp.forcedteleport"))
+                            sender.sendMessage(content.getPrefix() + "§c사용법) /워프 이동 [<워프이름>] [<플레이어>]");
+
+                        if (sender.hasPermission("warp.teleport"))
+                            sender.sendMessage(content.getPrefix() + "§c사용법) /워프 이동 [<워프이름>] [<플레이어>]");
+                        break;
                     }
                 }
                 break;
@@ -111,16 +117,16 @@ public class WarpExecutor implements TabExecutor {
                 if (!sender.hasPermission("starly.warp.list")) {
                     content.getMessageAfterPrefix(MessageType.ERROR, "permissionDenied").ifPresent(sender::sendMessage);
                     break;
-                } else if (warpManager.getWarps().size() == 0) {
+                } else if (warpStorage.getWarps().size() == 0) {
                     content.getMessageAfterPrefix(MessageType.ERROR, "emptyWarpList").ifPresent(sender::sendMessage);
                     break;
                 }
 
                 int page = args.length > 1 ? Integer.parseInt(args[1]) - 1 : 0;
                 int max = (page * 10) + 10;
-                int size = warpManager.getWarps().size();
+                int size = warpStorage.getWarps().size();
 
-                List<WarpData> warpDataList = warpManager.getWarps();
+                List<WarpData> warpDataList = warpStorage.getWarps();
 
                 if ((page * 10) > size) page = 0;
 
@@ -144,7 +150,7 @@ public class WarpExecutor implements TabExecutor {
                     break;
                 }
 
-                if (!sender.hasPermission("starly.warp.triggerCreate") && !sender.hasPermission("starly.warp.triggerDelete")) {
+                if (!sender.hasPermission("starly.warp.triggercreate") && !sender.hasPermission("starly.warp.triggerdelete")) {
                     content.getMessageAfterPrefix(MessageType.ERROR, "permissionDenied").ifPresent(sender::sendMessage);
                     break;
                 }
@@ -183,6 +189,14 @@ public class WarpExecutor implements TabExecutor {
                 break;
             }
 
+            default: {
+                content.getMessages(MessageType.NORMAL, "helpMessage").forEach(message -> {
+                    String formattedMessage = content.getPrefix() + " " + message;
+                    sender.sendMessage(formattedMessage);
+                });
+                break;
+            }
+
         }
 
         return false;
@@ -200,13 +214,20 @@ public class WarpExecutor implements TabExecutor {
             else if (sender.hasPermission("starly.warp.triggerDelete")) result.add("트리거");
 
             return StringUtil.copyPartialMatches(args[0], result, new ArrayList<>());
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("삭제")) {
-            if (!sender.hasPermission("starly.warp.delete")) return Collections.emptyList();
-
-            for (WarpData data : WarpManager.getInstance().getWarps()) {
-                result.add(data.getName());
-            }
-            return StringUtil.copyPartialMatches(args[1], result, new ArrayList<>());
+        } else if (args.length == 2) {
+            if (!args[0].equalsIgnoreCase("삭제") && !args[0].equalsIgnoreCase("이동"))
+                return Collections.emptyList();
+            else if (!sender.hasPermission("starly.warp.delete") && !sender.hasPermission("starly.warp.teleport"))
+                return Collections.emptyList();
+            else return WarpStorage.getInstance().getWarps()
+                        .stream()
+                        .map(WarpData::getName)
+                        .filter(name -> name.startsWith(args[1]))
+                        .collect(Collectors.toList());
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("이동")) {
+            if (!sender.hasPermission("starly.warp.forcedteleport"))
+                return Collections.emptyList();
+            return null;
         }
         return Collections.emptyList();
     }

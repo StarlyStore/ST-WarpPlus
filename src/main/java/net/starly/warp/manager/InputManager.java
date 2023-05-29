@@ -5,8 +5,6 @@ import net.starly.warp.context.MessageType;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -36,15 +34,26 @@ public class InputManager extends InputListenerBase {
         Player player = event.getPlayer();
         Location location = event.getClickedBlock().getLocation();
         if (event.getAction().name().contains("RIGHT")) {
+
+            if (!player.hasPermission("starly.warp.triggercreate")) {
+                MessageContent.getInstance().getMessageAfterPrefix(MessageType.ERROR,"permissionDenied").ifPresent(player::sendMessage);
+                return;
+            }
+
             clickedLocation.put(player.getUniqueId(), location);
             addChatListenTarget(player);
             MessageContent.getInstance().getMessageAfterPrefix(MessageType.NORMAL,"enterWarpTriggerName").ifPresent(player::sendMessage);
             return;
         }
 
-        WarpManager warpManager = WarpManager.getInstance();
+        if (!player.hasPermission("starly.warp.triggerdelete")) {
+            MessageContent.getInstance().getMessageAfterPrefix(MessageType.ERROR,"permissionDenied").ifPresent(player::sendMessage);
+            return;
+        }
 
-        if (!warpManager.hasTrigger(location)) {
+        WarpStorage warpStorage = WarpStorage.getInstance();
+
+        if (!warpStorage.hasTrigger(location)) {
             try {
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDERMEN_TELEPORT,100,0);
             } catch (NoSuchFieldError error) {
@@ -54,7 +63,7 @@ public class InputManager extends InputListenerBase {
             return;
         }
 
-        warpManager.removeTrigger(warpManager.getTrigger(location));
+        warpStorage.removeTrigger(warpStorage.getTrigger(location));
         MessageContent.getInstance().getMessageAfterPrefix(MessageType.NORMAL, "warpTriggerRemoveSuccess").ifPresent(player::sendMessage);
     }
 
@@ -62,16 +71,16 @@ public class InputManager extends InputListenerBase {
     protected void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         String warpName = event.getMessage();
-        WarpManager warpManager = WarpManager.getInstance();
+        WarpStorage warpStorage = WarpStorage.getInstance();
 
         event.setCancelled(true);
 
-        if (!warpManager.has(warpName)) {
+        if (!warpStorage.has(warpName)) {
             MessageContent.getInstance().getMessageAfterPrefix(MessageType.ERROR, "noExistWarpRegisterTrigger").ifPresent(player::sendMessage);
             clickedLocation.remove(event.getPlayer().getUniqueId());
             return;
         }
-        warpManager.addTrigger(warpManager.getWarp(warpName), clickedLocation.get(player.getUniqueId()));
+        warpStorage.addTrigger(warpStorage.getWarp(warpName), clickedLocation.get(player.getUniqueId()));
         MessageContent.getInstance().getMessageAfterPrefix(MessageType.NORMAL,"warpTriggerRegisterSuccess").ifPresent(player::sendMessage);
     }
 

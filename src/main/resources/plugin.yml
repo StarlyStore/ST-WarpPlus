@@ -1,4 +1,4 @@
-name: ST-WarpReloaded
+name: ST-WarpPlus
 main: net.starly.warp.WarpMain
 author: Starly Team
 website: http://starly.kr/
@@ -31,10 +31,10 @@ permissions:
   starly.warp.list:
     description: 워프 목록
     default: op
-  starly.warp.triggerCreate:
+  starly.warp.triggercreate:
     description: 트리거 등록
     default: op
-  starly.warp.triggerDelete:
+  starly.warp.triggerdelete:
     description: 트리거 삭제
     default: op
   starly.warp.reload:

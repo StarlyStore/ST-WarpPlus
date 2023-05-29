@@ -1,9 +1,10 @@
 package net.starly.warp;
 
+import net.starly.core.bstats.Metrics;
 import net.starly.warp.command.WarpExecutor;
 import net.starly.warp.context.MessageContent;
 import net.starly.warp.listener.PlayerMoveListener;
-import net.starly.warp.manager.WarpManager;
+import net.starly.warp.manager.WarpStorage;
 import net.starly.warp.scheduler.ParticleScheduler;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,7 +34,7 @@ public class WarpMain extends JavaPlugin {
 
         /* SETUP
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
-        //new Metrics(this, 12345); // TODO: 수정
+        new Metrics(this, 18593);
 
         /* CONFIG
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
@@ -48,7 +49,7 @@ public class WarpMain extends JavaPlugin {
 
         /* DATA
         ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
-        WarpManager.getInstance().loadData();
+        WarpStorage.getInstance().loadData();
 
         /* COMMAND
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
@@ -67,6 +68,6 @@ public class WarpMain extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        WarpManager.getInstance().saveData(); // 데이터 저장
+        WarpStorage.getInstance().saveData(); // 데이터 저장
     }
 }

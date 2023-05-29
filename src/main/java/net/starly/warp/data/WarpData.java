@@ -40,6 +40,6 @@ public class WarpData {
         float yaw = Float.parseFloat(map.get("yaw"));
 
 
-        return new WarpData(name, new Location(world,x,y,z,pitch,yaw));
+        return new WarpData(name, new Location(world,x,y,z,yaw,pitch));
     }
 }

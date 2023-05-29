@@ -1,8 +1,7 @@
 package net.starly.warp.scheduler;
 
-import net.starly.warp.data.WarpData;
 import net.starly.warp.data.WarpTrigger;
-import net.starly.warp.manager.WarpManager;
+import net.starly.warp.manager.WarpStorage;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
@@ -24,7 +23,7 @@ public class ParticleScheduler extends BukkitRunnable {
 
     @Override
     public void run() {
-        for (WarpTrigger warpTrigger : WarpManager.getInstance().getTriggerList()) {
+        for (WarpTrigger warpTrigger : WarpStorage.getInstance().getTriggerList()) {
             Location location = warpTrigger.getLocation().clone();
             location = location.add(0.5,1.5,0.5);
 

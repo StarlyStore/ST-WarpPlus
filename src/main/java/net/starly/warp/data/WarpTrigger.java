@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import net.starly.warp.WarpMain;
-import net.starly.warp.manager.WarpManager;
+import net.starly.warp.manager.WarpStorage;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -41,8 +41,8 @@ public class WarpTrigger {
         float pitch = Float.parseFloat(map.get("pitch"));
         float yaw = Float.parseFloat(map.get("yaw"));
 
-        if (WarpManager.getInstance().getWarp(name) == null) return null;
+        if (WarpStorage.getInstance().getWarp(name) == null) return null;
 
-        return new WarpTrigger(WarpManager.getInstance().getWarp(name), new Location(world,x,y,z,pitch,yaw));
+        return new WarpTrigger(WarpStorage.getInstance().getWarp(name), new Location(world,x,y,z,pitch,yaw));
     }
 }
